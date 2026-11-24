@@ -6,11 +6,11 @@ edited through the Django admin, so the site can be updated without touching cod
 Visitors can send messages through a validated, spam-protected, rate-limited contact
 form; messages are stored privately and can optionally be forwarded by email.
 
-> **Screenshots**
->
-> | Home | Project case study | Mobile |
-> |---|---|---|
-> | `docs/screenshots/home.png` *(add)* | `docs/screenshots/project.png` *(add)* | `docs/screenshots/mobile.png` *(add)* |
+| Home | Project case study | Mobile |
+|---|---|---|
+| ![Home page](docs/screenshots/home.png) | ![Project case study](docs/screenshots/project.png) | ![Mobile home page](docs/screenshots/mobile.png) |
+
+*Screenshots show the seeded content. Replace them after adding your photo and links.*
 
 ---
 
