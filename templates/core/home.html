@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static portfolio_tags %}
+
+{% block body_class %}page-home{% endblock %}
+
+{% block content %}
+{% if not profile %}
+  <section class="section container">
+    <div class="empty-state">
+      <h1>Portfolio not set up yet</h1>
+      <p>Run <code>python manage.py seed_portfolio</code> or add a developer profile in the admin.</p>
+    </div>
+  </section>
+{% else %}
+
+{# ---------------------------------------------------------------- Hero #}
+<section class="hero" id="home" data-section aria-labelledby="hero-title">
+  <div class="container hero__grid">
+    <div class="hero__intro">
+      <div class="hero__identity">
+        {% if profile.profile_image %}
+          <img class="avatar" src="{{ profile.profile_image.url }}" alt="Portrait of {{ profile.full_name }}" width="72" height="72">
+        {% else %}
+          <span class="avatar avatar--mono" aria-hidden="true">{{ profile.initials }}</span>
+        {% endif %}
+        <div>
+          <p class="hero__name">{{ profile.full_name }}{% if profile.preferred_name %} <span class="muted">· goes by {{ profile.preferred_name }}</span>{% endif %}</p>
+          <p class="hero__location mono">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" fill="currentColor"/></svg>
+            {{ profile.location }}
+          </p>
+        </div>
+      </div>
+
+      {% if profile.is_available and profile.availability_text %}
+        <p class="status-pill"><span class="status-pill__dot" aria-hidden="true"></span>{{ profile.availability_text }}</p>
+      {% endif %}
+
+      <h1 class="hero__title" id="hero-title">{{ profile.title }}</h1>
+      <p class="hero__summary">{{ profile.summary }}</p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#projects">View projects {% include "partials/icon_arrow.html" %}</a>
+        {% if profile.has_resume %}
+          <a class="btn btn--ghost" href="{% url 'core:resume_download' %}">{% include "partials/icon_download.html" %} Download resume</a>
+        {% else %}
+          <a class="btn btn--ghost" href="{% url 'core:resume' %}">View resume</a>
+        {% endif %}
+        {% if profile.github_url %}<a class="icon-link icon-link--lg" href="{{ profile.github_url }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile (opens in a new tab)">{% include "partials/icon_github.html" %}</a>{% endif %}
+        {% if profile.linkedin_url %}<a class="icon-link icon-link--lg" href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile (opens in a new tab)">{% include "partials/icon_linkedin.html" %}</a>{% endif %}
+      </div>
+    </div>
+
+    <figure class="terminal" aria-label="Technology stack, shown as a Python dictionary">
+      <div class="terminal__bar" aria-hidden="true">
+        <span class="terminal__dots"><i></i><i></i><i></i></span>
+        <span class="terminal__file">stack.py</span>
+      </div>
+<pre class="terminal__body"><code><span class="t-prompt">{{ profile.preferred_name|default:profile.first_name|lower }}@nyc</span> <span class="t-dim">~/portfolio $</span> python -i stack.py
+<span class="t-dim">&gt;&gt;&gt;</span> <span class="t-fn">print</span>(developer)
+{
+{% for group in skill_groups %}{% if group.key != "concepts" %}  <span class="t-key">"{{ group.key }}"</span>: [{% for s in group.skills %}<span class="t-str">"{{ s.name }}"</span>{% if not forloop.last %}, {% endif %}{% endfor %}],
+{% endif %}{% endfor %}  <span class="t-key">"based_in"</span>: <span class="t-str">"{{ profile.location }}"</span>,
+}
+<span class="t-dim">&gt;&gt;&gt;</span> developer.<span class="t-fn">open_to</span>
+<span class="t-str">"Junior Python Backend Developer roles"</span>
+<span class="t-dim">&gt;&gt;&gt;</span> <span class="caret" aria-hidden="true"></span></code></pre>
+    </figure>
+  </div>
+</section>
+
+{# ---------------------------------------------------------------- About #}
+<section class="section" id="about" data-section aria-labelledby="about-title">
+  <div class="container about">
+    <header class="section-head">
+      <p class="eyebrow mono">About</p>
+      <h2 id="about-title">Backend developer focused on data that stays correct</h2>
+    </header>
+    <div class="about__grid">
+      <div class="prose">{{ profile.about_text|paragraphs }}</div>
+      {% if profile.focus_area_list %}
+      <ul class="focus-list">
+        {% for item in profile.focus_area_list %}
+          <li><h3>{{ item.title }}</h3>{% if item.text %}<p>{{ item.text }}</p>{% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{# ---------------------------------------------------------------- Skills #}
+<section class="section section--alt" id="skills" data-section aria-labelledby="skills-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow mono">Skills</p>
+      <h2 id="skills-title">Technical skills</h2>
+      <p class="section-head__lede">The languages, frameworks and concepts I use in my projects.</p>
+    </header>
+    <div class="skills-grid">
+      {% for group in skill_groups %}
+        <section class="skill-group{% if group.key == 'concepts' %} skill-group--wide{% endif %}" aria-labelledby="skills-{{ group.key }}">
+          <h3 id="skills-{{ group.key }}" class="skill-group__title"><span class="mono">{{ forloop.counter|stringformat:"02d" }}</span> {{ group.label }}</h3>
+          <ul class="chips">
+            {% for skill in group.skills %}<li class="chip">{% if skill.icon %}<span class="chip__icon" aria-hidden="true">{{ skill.icon }}</span>{% endif %}{{ skill.name }}</li>{% endfor %}
+          </ul>
+        </section>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ---------------------------------------------------------------- Projects #}
+<section class="section" id="projects" data-section aria-labelledby="projects-title">
+  <div class="container">
+    <header class="section-head section-head--row">
+      <div>
+        <p class="eyebrow mono">Projects</p>
+        <h2 id="projects-title">Selected projects</h2>
+        <p class="section-head__lede">Independent projects I designed and built. Each has a case study covering architecture, database design and trade-offs.</p>
+      </div>
+      <a class="link-arrow" href="{% url 'projects:list' %}">All projects {% include "partials/icon_arrow.html" %}</a>
+    </header>
+    {% if projects %}
+      <div class="project-grid">
+        {% for project in projects %}{% include "partials/project_card.html" %}{% endfor %}
+      </div>
+    {% else %}
+      <p class="muted">Projects will appear here once published.</p>
+    {% endif %}
+  </div>
+</section>
+
+{# ---------------------------------------------------------------- Resume #}
+<section class="section section--alt" id="resume" data-section aria-labelledby="resume-title">
+  <div class="container resume-teaser">
+    <div>
+      <p class="eyebrow mono">Resume</p>
+      <h2 id="resume-title">Resume</h2>
+      <div class="prose">{{ profile.resume_summary|default:profile.summary|paragraphs }}</div>
+    </div>
+    <div class="resume-teaser__actions">
+      <a class="btn btn--primary" href="{% url 'core:resume' %}">View full resume {% include "partials/icon_arrow.html" %}</a>
+      {% if profile.has_resume %}
+        <a class="btn btn--ghost" href="{% url 'core:resume_download' %}">{% include "partials/icon_download.html" %} Download PDF</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{# ---------------------------------------------------------------- Contact #}
+<section class="section" id="contact" data-section aria-labelledby="contact-title">
+  <div class="container contact">
+    <div class="contact__info">
+      <p class="eyebrow mono">Contact</p>
+      <h2 id="contact-title">Let's talk</h2>
+      <p class="section-head__lede">I'm looking for a Junior Python Backend Developer role in New York City or remote. Send a message and I'll reply by email.</p>
+      {% include "contact/_details.html" %}
+    </div>
+    <div class="card contact__form">
+      {% include "partials/contact_form.html" %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

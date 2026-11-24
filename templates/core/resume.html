@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load portfolio_tags %}
+{% block title %}Resume — {{ profile.full_name|default:"Portfolio" }}{% endblock %}
+{% block meta_description %}Resume of {{ profile.full_name }}, {{ profile.title }} in {{ profile.location }}.{% endblock %}
+{% block og_title %}Resume — {{ profile.full_name }}{% endblock %}
+{% block body_class %}page-resume{% endblock %}
+{% block content %}
+<section class="section page-top">
+  <div class="container resume-wrap">
+    <div class="resume-toolbar no-print">
+      <p class="eyebrow mono">Resume</p>
+      <div class="resume-toolbar__actions">
+        {% if profile.has_resume %}
+          <a class="btn btn--primary" href="{% url 'core:resume_download' %}">{% include "partials/icon_download.html" %} Download PDF</a>
+        {% endif %}
+        <button class="btn btn--ghost" type="button" data-print>Print</button>
+      </div>
+    </div>
+
+    {% if profile %}
+    <article class="resume" aria-labelledby="resume-name">
+      <header class="resume__header">
+        <h1 id="resume-name">{{ profile.full_name|upper }}</h1>
+        <p class="resume__title">{{ profile.title }}</p>
+        <p class="resume__contact">
+          <span>{{ profile.location }}</span>
+          {% if profile.email %}<span><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></span>{% endif %}
+          {% if profile.phone %}<span>{{ profile.phone }}</span>{% endif %}
+          {% if profile.github_url %}<span><a href="{{ profile.github_url }}">{{ profile.github_url|cut:"https://"|cut:"www." }}</a></span>{% endif %}
+          {% if profile.linkedin_url %}<span><a href="{{ profile.linkedin_url }}">{{ profile.linkedin_url|cut:"https://"|cut:"www." }}</a></span>{% endif %}
+          <span>{{ site_url|cut:"https://"|cut:"http://" }}</span>
+        </p>
+      </header>
+
+      <section class="resume__section">
+        <h2>Professional summary</h2>
+        {{ profile.resume_summary|default:profile.summary|paragraphs }}
+      </section>
+
+      <section class="resume__section">
+        <h2>Technical skills</h2>
+        <dl class="resume__skills">
+          {% for group in skill_groups %}
+            <div><dt>{{ group.label }}</dt><dd>{% for s in group.skills %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</dd></div>
+          {% endfor %}
+        </dl>
+      </section>
+
+      <section class="resume__section">
+        <h2>Technical projects</h2>
+        {% for project in projects %}
+          <div class="resume__project">
+            <h3>{{ project.title }}</h3>
+            <p class="resume__meta">{% for t in project.technologies.all %}{{ t.name }}{% if not forloop.last %} | {% endif %}{% endfor %}</p>
+            <ul>{% for item in project.resume_highlight_list %}<li>{{ item }}</li>{% endfor %}</ul>
+            {% if project.github_url %}<p class="resume__meta">GitHub: <a href="{{ project.github_url }}">{{ project.github_url|cut:"https://" }}</a></p>{% endif %}
+          </div>
+        {% endfor %}
+      </section>
+
+      {% if profile.professional_development_list %}
+      <section class="resume__section">
+        <h2>Professional development</h2>
+        <h3>Independent Python Backend Development</h3>
+        <ul>{% for item in profile.professional_development_list %}<li>{{ item }}</li>{% endfor %}</ul>
+      </section>
+      {% endif %}
+
+      {% if profile.education_list %}
+      <section class="resume__section">
+        <h2>Education</h2>
+        <ul class="resume__plain">{% for item in profile.education_list %}<li>{{ item }}</li>{% endfor %}</ul>
+      </section>
+      {% endif %}
+
+      {% if profile.language_list %}
+      <section class="resume__section">
+        <h2>Languages</h2>
+        <p>{{ profile.language_list|join:", " }}</p>
+      </section>
+      {% endif %}
+    </article>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

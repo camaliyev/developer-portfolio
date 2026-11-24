@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Projects — {{ profile.full_name|default:"Portfolio" }}{% endblock %}
+{% block meta_description %}Backend projects by {{ profile.full_name }}: Django, FastAPI, SQLAlchemy and relational database design.{% endblock %}
+{% block og_title %}Projects — {{ profile.full_name }}{% endblock %}
+{% block content %}
+<section class="section page-top">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow mono">Projects</p>
+      <h1>Projects</h1>
+      <p class="section-head__lede">Independent projects I designed and built. Open a project for its architecture, database design and the technical decisions behind it.</p>
+    </header>
+    {% if projects %}
+      <div class="project-grid">
+        {% for project in projects %}{% include "partials/project_card.html" %}{% endfor %}
+      </div>
+    {% else %}
+      <p class="muted">No projects are published yet.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

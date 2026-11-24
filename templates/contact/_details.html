@@ -1,0 +1,12 @@
+<dl class="details">
+  {% if profile.email %}
+    <div><dt>Email</dt><dd><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></dd></div>
+  {% endif %}
+  {% if profile.phone %}
+    <div><dt>Phone</dt><dd><a href="tel:{{ profile.phone|cut:' ' }}">{{ profile.phone }}</a></dd></div>
+  {% endif %}
+  <div><dt>Location</dt><dd>{{ profile.location }}</dd></div>
+  {% if profile.github_url %}<div><dt>GitHub</dt><dd><a href="{{ profile.github_url }}" target="_blank" rel="noopener noreferrer">{{ profile.github_url|cut:"https://"|cut:"www." }}</a></dd></div>{% endif %}
+  {% if profile.linkedin_url %}<div><dt>LinkedIn</dt><dd><a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer">{{ profile.linkedin_url|cut:"https://"|cut:"www." }}</a></dd></div>{% endif %}
+  {% if profile.language_list %}<div><dt>Languages</dt><dd>{{ profile.language_list|join:", " }}</dd></div>{% endif %}
+</dl>

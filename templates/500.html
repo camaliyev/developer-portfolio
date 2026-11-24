@@ -1,0 +1,20 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Server error</title>
+  <link rel="icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+  <main id="main" class="section page-top">
+    <div class="container error-page">
+      <p class="mono error-page__code">500 Server Error</p>
+      <h1>Something went wrong on the server</h1>
+      <p class="muted">The error has been logged. Please try again in a few minutes.</p>
+      <div class="hero__actions"><a class="btn btn--primary" href="/">Back to home</a></div>
+    </div>
+  </main>
+</body>
+</html>

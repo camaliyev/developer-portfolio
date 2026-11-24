@@ -1,0 +1,21 @@
+<article class="project-card">
+  <a class="project-card__cover cover" href="{{ project.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+    {% include "partials/project_cover.html" %}
+  </a>
+  <div class="project-card__body">
+    <h3 class="project-card__title"><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></h3>
+    {% if project.subtitle %}<p class="project-card__subtitle mono">{{ project.subtitle }}</p>{% endif %}
+    <p class="project-card__desc">{{ project.short_description }}</p>
+    <ul class="badges" aria-label="Technologies">
+      {% for tech in project.technologies.all %}<li class="badge">{{ tech.name }}</li>{% endfor %}
+    </ul>
+    <ul class="project-card__features">
+      {% for feature in project.feature_list|slice:":3" %}<li>{{ feature }}</li>{% endfor %}
+    </ul>
+    <div class="project-card__actions">
+      <a class="btn btn--primary btn--sm" href="{{ project.get_absolute_url }}">View project details<span class="sr-only">: {{ project.name }}</span></a>
+      {% if project.github_url %}<a class="btn btn--ghost btn--sm" href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer">{% include "partials/icon_github.html" %} GitHub<span class="sr-only"> repository for {{ project.name }} (opens in a new tab)</span></a>{% endif %}
+      {% if project.demo_url %}<a class="btn btn--ghost btn--sm" href="{{ project.demo_url }}" target="_blank" rel="noopener noreferrer">Live demo {% include "partials/icon_external.html" %}<span class="sr-only"> of {{ project.name }} (opens in a new tab)</span></a>{% endif %}
+    </div>
+  </div>
+</article>

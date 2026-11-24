@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Contact — {{ profile.full_name|default:"Portfolio" }}{% endblock %}
+{% block meta_description %}Contact {{ profile.full_name }}, {{ profile.title }} in {{ profile.location }}.{% endblock %}
+{% block og_title %}Contact — {{ profile.full_name }}{% endblock %}
+{% block content %}
+<section class="section page-top">
+  <div class="container contact">
+    <div class="contact__info">
+      <p class="eyebrow mono">Contact</p>
+      <h1>Let's talk</h1>
+      <p class="section-head__lede">I'm looking for a Junior Python Backend Developer role in New York City or remote. Send a message and I'll reply by email.</p>
+      {% if profile %}{% include "contact/_details.html" %}{% endif %}
+    </div>
+    <div class="card contact__form">
+      {% include "partials/contact_form.html" %}
+    </div>
+  </div>
+</section>
+{% endblock %}

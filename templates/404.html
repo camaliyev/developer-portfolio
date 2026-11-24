@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Page not found{% endblock %}
+{% block meta_description %}The page you requested could not be found.{% endblock %}
+{% block content %}
+<section class="section page-top">
+  <div class="container error-page">
+    <p class="mono error-page__code">404 Not Found</p>
+    <h1>This page doesn't exist</h1>
+    <p class="muted">The link may be out of date, or the project may have been unpublished.</p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="{% url 'core:home' %}">Back to home</a>
+      <a class="btn btn--ghost" href="{% url 'projects:list' %}">View projects</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

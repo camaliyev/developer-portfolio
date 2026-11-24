@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load portfolio_tags %}
+{% block title %}{{ project.name }} — {{ profile.full_name|default:"Portfolio" }}{% endblock %}
+{% block meta_description %}{{ project.short_description }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ project.title }}{% endblock %}
+{% block og_description %}{{ project.short_description }}{% endblock %}
+{% block og_image %}{% if project.image %}<meta property="og:image" content="{{ site_url }}{{ project.image.url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block content %}
+<article class="case">
+  <header class="case__head page-top">
+    <div class="container">
+      <nav class="breadcrumb mono" aria-label="Breadcrumb">
+        <a href="{% url 'projects:list' %}">Projects</a> <span aria-hidden="true">/</span> <span aria-current="page">{{ project.name }}</span>
+      </nav>
+      <h1 class="case__title">{{ project.name }}</h1>
+      {% if project.subtitle %}<p class="case__subtitle">{{ project.subtitle }}</p>{% endif %}
+      <p class="case__lede">{{ project.short_description }}</p>
+      <ul class="badges" aria-label="Technologies">
+        {% for tech in project.technologies.all %}<li class="badge">{{ tech.name }}</li>{% endfor %}
+      </ul>
+      <div class="case__actions">
+        {% if project.github_url %}<a class="btn btn--primary" href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer">{% include "partials/icon_github.html" %} View repository<span class="sr-only"> (opens in a new tab)</span></a>{% endif %}
+        {% if project.demo_url %}<a class="btn btn--ghost" href="{{ project.demo_url }}" target="_blank" rel="noopener noreferrer">Live demo {% include "partials/icon_external.html" %}<span class="sr-only"> (opens in a new tab)</span></a>{% endif %}
+      </div>
+      <div class="case__cover cover">{% include "partials/project_cover.html" %}</div>
+    </div>
+  </header>
+
+  <div class="container case__layout">
+    <aside class="case__toc" aria-label="On this page">
+      <p class="mono small muted">On this page</p>
+      <ol>
+        <li><a href="#overview">Overview</a></li>
+        {% if project.problem_statement %}<li><a href="#problem">Problem</a></li>{% endif %}
+        {% if project.architecture %}<li><a href="#architecture">Architecture</a></li>{% endif %}
+        {% if project.database_design %}<li><a href="#database">Database design</a></li>{% endif %}
+        <li><a href="#features">Key functionality</a></li>
+        {% if project.challenge_list %}<li><a href="#challenges">Challenges</a></li>{% endif %}
+        {% if project.screenshots.all %}<li><a href="#screenshots">Screenshots</a></li>{% endif %}
+        {% if project.setup_instructions %}<li><a href="#setup">Setup</a></li>{% endif %}
+      </ol>
+    </aside>
+
+    <div class="case__body">
+      <section id="overview" class="case__section">
+        <h2>Overview</h2>
+        <div class="prose">{{ project.full_description|paragraphs }}</div>
+      </section>
+
+      {% if project.problem_statement %}
+      <section id="problem" class="case__section">
+        <h2>Problem statement</h2>
+        <div class="prose">{{ project.problem_statement|paragraphs }}</div>
+      </section>
+      {% endif %}
+
+      {% if project.architecture %}
+      <section id="architecture" class="case__section">
+        <h2>Technical architecture</h2>
+        <div class="prose">{{ project.architecture|paragraphs }}</div>
+      </section>
+      {% endif %}
+
+      {% if project.database_design %}
+      <section id="database" class="case__section">
+        <h2>Database design</h2>
+        <div class="prose">{{ project.database_design|paragraphs }}</div>
+      </section>
+      {% endif %}
+
+      <section id="features" class="case__section">
+        <h2>Key functionality</h2>
+        <ul class="check-list">
+          {% for feature in project.feature_list %}<li>{{ feature }}</li>{% endfor %}
+        </ul>
+      </section>
+
+      <section class="case__section">
+        <h2>Technologies used</h2>
+        <ul class="chips">
+          {% for tech in project.technologies.all %}<li class="chip">{{ tech.name }}</li>{% endfor %}
+        </ul>
+      </section>
+
+      {% if project.challenge_list %}
+      <section id="challenges" class="case__section">
+        <h2>Technical challenges</h2>
+        <div class="challenge-list">
+          {% for challenge in project.challenge_list %}<div class="challenge">{% if challenge.title %}<h3>{{ challenge.title }}</h3>{% endif %}<p>{{ challenge.body }}</p></div>{% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% if project.screenshots.all %}
+      <section id="screenshots" class="case__section">
+        <h2>Screenshots</h2>
+        <div class="shots">
+          {% for shot in project.screenshots.all %}
+            <figure class="shot">
+              <a href="{{ shot.image.url }}" target="_blank" rel="noopener"><img src="{{ shot.image.url }}" alt="{{ shot.alt_text }}" loading="lazy" decoding="async"></a>
+              {% if shot.caption %}<figcaption>{{ shot.caption }}</figcaption>{% endif %}
+            </figure>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% if project.setup_instructions %}
+      <section id="setup" class="case__section">
+        <h2>Setup instructions</h2>
+        <pre class="code-block"><code>{{ project.setup_instructions }}</code></pre>
+      </section>
+      {% endif %}
+
+      {% if project.github_url %}
+      <section class="case__section case__repo">
+        <h2>Source code</h2>
+        <p>The full source code is on GitHub.</p>
+        <a class="btn btn--ghost" href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer">{% include "partials/icon_github.html" %} {{ project.github_url|cut:"https://" }}</a>
+      </section>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if others %}
+  <section class="section section--alt">
+    <div class="container">
+      <h2 class="section-title-sm">More projects</h2>
+      <div class="project-grid project-grid--two">
+        {% for project in others %}{% include "partials/project_card.html" %}{% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</article>
+{% endblock %}

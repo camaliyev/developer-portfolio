@@ -1,0 +1,13 @@
+{# Project cover: uploaded screenshot, or a generated code-style cover when none exists. #}
+{% if project.image %}
+  <img class="cover__img" src="{{ project.image.url }}" alt="Screenshot of {{ project.name }}" loading="lazy" decoding="async" width="1280" height="800">
+{% else %}
+  <div class="cover__generated" aria-hidden="true">
+    <div class="cover__bar"><i></i><i></i><i></i><span>{{ project.slug }}</span></div>
+    <div class="cover__code">
+      <p><span class="t-kw">project</span> <span class="t-fn">{{ project.name }}</span></p>
+      <p class="cover__sub">{{ project.subtitle }}</p>
+      <p class="cover__stack">{% for tech in project.technologies.all %}<span>{{ tech.name }}</span>{% endfor %}</p>
+    </div>
+  </div>
+{% endif %}
