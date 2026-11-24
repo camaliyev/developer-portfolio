@@ -1,0 +1,52 @@
+# Render Blueprint. Review plans and pricing before applying it:
+# the persistent disk requires a paid instance type.
+databases:
+  - name: portfolio-db
+    plan: free            # Render's free PostgreSQL expires; use a paid plan for long-term use
+    databaseName: portfolio
+    user: portfolio
+
+services:
+  - type: web
+    name: portfolio
+    runtime: python
+    plan: starter         # disks are not available on the free instance type
+    buildCommand: ./build.sh
+    startCommand: gunicorn config.wsgi:application
+    healthCheckPath: /robots.txt
+    disk:
+      name: media
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.1
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: portfolio-db
+          property: connectionString
+      - key: MEDIA_ROOT
+        value: /var/data/media
+      - key: SERVE_MEDIA
+        value: "true"
+      - key: WEB_CONCURRENCY
+        value: "2"
+      # Set these in the dashboard once you have them:
+      - key: SITE_URL
+        sync: false
+      - key: DJANGO_ALLOWED_HOSTS
+        sync: false
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: CONTACT_NOTIFY_EMAIL
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
