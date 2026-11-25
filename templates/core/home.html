@@ -46,9 +46,15 @@
         {% else %}
           <a class="btn btn--ghost" href="{% url 'core:resume' %}">View resume</a>
         {% endif %}
-        {% if profile.github_url %}<a class="icon-link icon-link--lg" href="{{ profile.github_url }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile (opens in a new tab)">{% include "partials/icon_github.html" %}</a>{% endif %}
-        {% if profile.linkedin_url %}<a class="icon-link icon-link--lg" href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile (opens in a new tab)">{% include "partials/icon_linkedin.html" %}</a>{% endif %}
       </div>
+
+      {% if profile.email or profile.github_url or profile.linkedin_url %}
+      <ul class="hero__links" aria-label="Contact links">
+        {% if profile.email %}<li><a class="hero__link" href="mailto:{{ profile.email }}">{% include "partials/icon_email.html" %}<span>{{ profile.email }}</span></a></li>{% endif %}
+        {% if profile.github_url %}<li><a class="hero__link" href="{{ profile.github_url }}" target="_blank" rel="noopener noreferrer">{% include "partials/icon_github.html" %}<span>GitHub</span><span class="sr-only"> (opens in a new tab)</span></a></li>{% endif %}
+        {% if profile.linkedin_url %}<li><a class="hero__link" href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer">{% include "partials/icon_linkedin.html" %}<span>LinkedIn</span><span class="sr-only"> (opens in a new tab)</span></a></li>{% endif %}
+      </ul>
+      {% endif %}
     </div>
 
     <figure class="terminal" aria-label="Technology stack, shown as a Python dictionary">

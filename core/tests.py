@@ -63,6 +63,31 @@ class HomePageTests(TestCase):
         response = self.client.get(reverse("core:home"))
         self.assertContains(response, "https://github.com/example")
 
+    def test_hero_contact_links(self):
+        self.profile.email = "aliyevcameron@gmail.com"
+        self.profile.github_url = "https://github.com/camaliyev"
+        self.profile.linkedin_url = "https://www.linkedin.com/in/kamran-aliyev-b7a6a6323/"
+        self.profile.phone = "555-0100"
+        self.profile.save()
+        response = self.client.get(reverse("core:home"))
+        self.assertContains(response, 'class="hero__links"')
+        self.assertContains(response, 'href="mailto:aliyevcameron@gmail.com"')
+        self.assertContains(
+            response,
+            'href="https://github.com/camaliyev" target="_blank" rel="noopener noreferrer"',
+        )
+        self.assertContains(
+            response,
+            'href="https://www.linkedin.com/in/kamran-aliyev-b7a6a6323/" target="_blank" rel="noopener noreferrer"',
+        )
+        hero = response.content.decode().split('class="hero__links"')[1].split("</ul>")[0]
+        self.assertNotIn("555-0100", hero)
+        self.assertNotIn("tel:", hero)
+
+    def test_hero_contact_links_hidden_when_empty(self):
+        response = self.client.get(reverse("core:home"))
+        self.assertNotContains(response, 'class="hero__links"')
+
     def test_availability_indicator_toggle(self):
         response = self.client.get(reverse("core:home"))
         self.assertContains(response, "status-pill")
@@ -184,12 +209,12 @@ class SeedCommandTests(TestCase):
         self.assertEqual(DeveloperProfile.objects.get().summary, "Edited in admin")
         self.assertEqual(Project.objects.get(slug="stockflow").short_description, "Edited")
 
-    def test_seed_contains_no_invented_contact_details(self):
+    def test_seed_contact_details_match_provided_values(self):
         call_command("seed_portfolio", stdout=open("/dev/null", "w"))
         profile = DeveloperProfile.objects.get()
-        self.assertEqual(profile.email, "")
+        self.assertEqual(profile.email, "aliyevcameron@gmail.com")
+        self.assertEqual(profile.github_url, "https://github.com/camaliyev")
         self.assertEqual(profile.phone, "")
-        self.assertEqual(profile.github_url, "")
         self.assertEqual(profile.education, "")
         self.assertFalse(Project.objects.exclude(github_url="").exists())
 

@@ -65,6 +65,9 @@ PROFILE = {
     ),
     "education": "",
     "languages": "English, Russian, Turkish",
+    "email": "aliyevcameron@gmail.com",
+    "github_url": "https://github.com/camaliyev",
+    "linkedin_url": "https://www.linkedin.com/in/kamran-aliyev-b7a6a6323/",
     "is_available": True,
     "availability_text": "Open to junior backend roles",
 }
